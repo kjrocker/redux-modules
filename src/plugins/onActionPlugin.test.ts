@@ -1,16 +1,16 @@
-import createModuleStore from './createModuleStore';
+import createModuleStore from '../createModuleStore';
 import onActionPlugin from './onActionPlugin';
-import * as sinon from 'sinon';
+import sinon from 'sinon';
 
 const createOnActionStore = createModuleStore({ plugins: [onActionPlugin] });
 const simplestModule = { name: 'Test', reducers: { key: (state = {}) => state } };
 
 describe('onActionPlugin', () => {
-  it('calls the given function when passed actions', () => {
+  it('calls the given function when action actually dispatched', () => {
     const onActionSpy = sinon.spy();
     const store = createOnActionStore([{ ...simplestModule, onAction: onActionSpy }]);
-    store.dispatch({ type: 'Test' });
-    expect(onActionSpy.callCount).toEqual(1);
+    store.dispatch({ type: 'wat' });
+    expect(onActionSpy.callCount).toBe(1);
   });
 
   it('adds a new function to middleware', () => {

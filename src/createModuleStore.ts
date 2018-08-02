@@ -1,4 +1,12 @@
-import { ReducersMapObject, createStore, combineReducers, compose, Middleware } from 'redux';
+import {
+  ReducersMapObject,
+  createStore,
+  combineReducers,
+  compose,
+  Middleware,
+  applyMiddleware,
+  StoreEnhancer
+} from 'redux';
 
 export interface ModulePlugin {
   (m: ReduxModule): ReduxModule;
@@ -6,21 +14,40 @@ export interface ModulePlugin {
 
 export interface CreateModuleStoreConfig {
   plugins?: Array<ModulePlugin>;
+  middleware?: Array<Middleware>;
+  enhancers?: Array<StoreEnhancer>;
+  compose?: typeof compose;
 }
 
 export interface ReduxModule {
   name: string;
   reducers: ReducersMapObject;
   middleware?: Middleware[];
+  enhancers?: StoreEnhancer[];
   [index: string]: any;
 }
 
+const combineModuleReducers = (acc: object, mod: ReduxModule) => ({ ...acc, ...mod.reducers });
+const combineModuleInitialState = (acc: object, mod: ReduxModule) => ({ ...acc, ...(mod.initialState || {}) });
+const combineModuleMiddleware = (acc: Middleware[], mod: ReduxModule) => acc.concat(mod.middleware || []);
+const combineModuleEnhancers = (acc: StoreEnhancer[], mod: ReduxModule) => acc.concat(mod.enhancers || []);
+
 const createModuleStore = (config: CreateModuleStoreConfig) => {
   const applyPlugins = config.plugins ? compose<ReduxModule>(...config.plugins) : (x: ReduxModule) => x;
+  const defaultMiddleware = config.middleware ? config.middleware : [];
+  const defaultEnhancers = config.enhancers ? config.enhancers : [];
+  const composeFn = config.compose ? config.compose : compose;
   return (modules: ReduxModule[]) => {
     const newModules = modules.map(applyPlugins);
-    const allReducers = newModules.reduce((acc, mod) => ({ ...acc, ...mod.reducers }), {});
-    return createStore(combineReducers(allReducers));
+    const allReducers = newModules.reduce(combineModuleReducers, {});
+    const allMiddleware = newModules.reduce(combineModuleMiddleware, defaultMiddleware);
+    const allEnhancers = newModules.reduce(combineModuleEnhancers, defaultEnhancers);
+    const allInitialState = newModules.reduce(combineModuleInitialState, {});
+    return createStore(
+      combineReducers(allReducers),
+      allInitialState,
+      composeFn(applyMiddleware(...allMiddleware), ...allEnhancers)
+    );
   };
 };
 
