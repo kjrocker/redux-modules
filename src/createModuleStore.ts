@@ -5,7 +5,10 @@ import {
   compose,
   Middleware,
   applyMiddleware,
-  StoreEnhancer
+  StoreEnhancer,
+  Reducer,
+  Store,
+  AnyAction
 } from 'redux';
 
 export interface ModulePlugin {
@@ -16,7 +19,7 @@ export interface CreateModuleStoreConfig {
   plugins?: Array<ModulePlugin>;
   middleware?: Array<Middleware>;
   enhancers?: Array<StoreEnhancer>;
-  compose?: typeof compose;
+  compose?: Function;
 }
 
 export interface ReduxModule {
@@ -27,12 +30,17 @@ export interface ReduxModule {
   [index: string]: any;
 }
 
-const combineModuleReducers = (acc: object, mod: ReduxModule) => ({ ...acc, ...mod.reducers });
-const combineModuleInitialState = (acc: object, mod: ReduxModule) => ({ ...acc, ...(mod.initialState || {}) });
+const combineModuleReducers = (acc: Record<string, Reducer>, mod: ReduxModule) => ({ ...acc, ...mod.reducers });
+const combineModuleInitialState = (acc: Record<string, any>, mod: ReduxModule) => ({
+  ...acc,
+  ...(mod.initialState || {})
+});
 const combineModuleMiddleware = (acc: Middleware[], mod: ReduxModule) => acc.concat(mod.middleware || []);
 const combineModuleEnhancers = (acc: StoreEnhancer[], mod: ReduxModule) => acc.concat(mod.enhancers || []);
 
-const createModuleStore = (config: CreateModuleStoreConfig) => {
+export type CreateModuleStore = (config?: CreateModuleStoreConfig) => (modules: ReduxModule[]) => Store<{}, AnyAction>;
+
+const createModuleStore: CreateModuleStore = (config = {}) => {
   const applyPlugins = config.plugins ? compose<ReduxModule>(...config.plugins) : (x: ReduxModule) => x;
   const defaultMiddleware = config.middleware ? config.middleware : [];
   const defaultEnhancers = config.enhancers ? config.enhancers : [];
