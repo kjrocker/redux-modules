@@ -1,5 +1,5 @@
 import { ModulePlugin } from '../createModuleStore';
-import { StoreEnhancer, Reducer } from 'redux';
+// import { StoreEnhancer, Reducer } from 'redux';
 
 const initEnhancer = (callback: any) => (next: any) => (reducers: any, initialState: any, enhancer: any) => {
   const store = next(reducers, initialState, enhancer);

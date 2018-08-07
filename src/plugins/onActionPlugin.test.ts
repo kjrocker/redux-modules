@@ -24,6 +24,6 @@ describe('onActionPlugin', () => {
   });
 
   it('doesnt explode when nothing provided', () => {
-    const newModule = onActionPlugin(simplestModule);
+    onActionPlugin(simplestModule);
   });
 });

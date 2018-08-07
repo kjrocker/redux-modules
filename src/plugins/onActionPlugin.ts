@@ -1,5 +1,5 @@
 import { ModulePlugin } from '../createModuleStore';
-import { Store, Middleware } from 'redux';
+import { Middleware } from 'redux';
 
 export const createMiddlewareFromOnAction = (onAction: any): Middleware => (store) => (next) => (action) => {
   onAction({ store, action });

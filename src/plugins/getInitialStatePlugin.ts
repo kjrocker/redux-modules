@@ -1,5 +1,5 @@
 import { ModulePlugin } from '../createModuleStore';
-import { StoreEnhancer, Reducer } from 'redux';
+// import { StoreEnhancer, Reducer } from 'redux';
 
 const getInitialStatePlugin: ModulePlugin = ({ getInitialState, initialState = {}, ...rest }) => {
   const newInitialState =

@@ -7,7 +7,7 @@ const createInitStore = createModuleStore({ plugins: [initPlugin] });
 describe('initPlugin', () => {
   it('calls the provided function', () => {
     const initSpy = sinon.spy();
-    const store = createInitStore([{ name: 'Test', reducers: {}, init: initSpy }]);
+    createInitStore([{ name: 'Test', reducers: {}, init: initSpy }]);
     expect(initSpy.callCount).toBe(1);
   });
 
@@ -18,7 +18,6 @@ describe('initPlugin', () => {
   });
 
   it('doesnt explode when init is missing', () => {
-    const initSpy = sinon.spy();
-    const store = createInitStore([{ name: 'Test', reducers: {} }]);
+    createInitStore([{ name: 'Test', reducers: {} }]);
   });
 });

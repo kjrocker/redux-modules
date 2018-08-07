@@ -3,8 +3,8 @@ import createModuleStore from './createModuleStore';
 import { loggerPlugin, getInitialStatePlugin } from './plugins';
 import { Middleware, compose } from 'redux';
 
-// Copy-Paste of Redux Thunk
-const basicThunk: Middleware = ({ dispatch, getState }) => (next) => (action) => {
+// Log the action types as they're fired
+const basicThunk: Middleware = (_store) => (next) => (action) => {
   console.log(action.type);
   return next(action);
 };
@@ -20,16 +20,14 @@ describe('createModuleStore', () => {
 
   it('applies custom compose function', () => {
     const composeSpy = sinon.spy(compose);
-    const store = createModuleStore({ compose: composeSpy })([
-      { name: 'First', reducers: { key1: (state = '', action) => state } }
-    ]);
+    createModuleStore({ compose: composeSpy })([{ name: 'First', reducers: { key1: (state = '') => state } }]);
     expect(composeSpy.called).toBeTruthy();
   });
 
   it('applies default middleware', () => {
     sinon.spy(console, 'log');
     const store = createModuleStore({ middleware: [basicThunk] })([
-      { name: 'First', reducers: { key1: (state = '', action) => state } }
+      { name: 'First', reducers: { key1: (state = '') => state } }
     ]);
     store.dispatch({ type: 'WAT' });
     expect((console.log as SinonSpy).calledWith('WAT')).toBeTruthy();
