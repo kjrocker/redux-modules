@@ -1,9 +1,9 @@
 {
   "author": "Kevin Rocker",
   "license": "MIT",
-  "name": "with-props",
+  "name": "redux-partition",
   "version": "1.0.0",
-  "description": "HOC For Rearranging React Props",
+  "description": "Partitioning your Redux into Pieces",
   "main": "index.ts",
   "types": "index.d.ts",
   "scripts": {

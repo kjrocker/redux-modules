@@ -1,15 +1,15 @@
 import {
-  ReducersMapObject,
-  createStore,
+  AnyAction,
+  applyMiddleware,
   combineReducers,
   compose,
+  createStore,
   Middleware,
-  applyMiddleware,
-  StoreEnhancer,
   Reducer,
+  ReducersMapObject,
   Store,
-  AnyAction
-} from 'redux';
+  StoreEnhancer
+  } from 'redux';
 
 export interface ModulePlugin {
   (m: ReduxModule): ReduxModule;
@@ -35,6 +35,7 @@ const combineModuleInitialState = (acc: Record<string, any>, mod: ReduxModule) =
   ...acc,
   ...(mod.initialState || {})
 });
+
 const combineModuleMiddleware = (acc: Middleware[], mod: ReduxModule) => acc.concat(mod.middleware || []);
 const combineModuleEnhancers = (acc: StoreEnhancer[], mod: ReduxModule) => acc.concat(mod.enhancers || []);
 

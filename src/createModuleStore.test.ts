@@ -1,11 +1,11 @@
+import { compose, Middleware } from 'redux';
 import sinon, { SinonSpy } from 'sinon';
 import createModuleStore from './createModuleStore';
-import { loggerPlugin, getInitialStatePlugin } from './plugins';
-import { Middleware, compose } from 'redux';
+import { getInitialStatePlugin, loggerPlugin } from './plugins';
 
 // Log the action types as they're fired
-const basicThunk: Middleware = (_store) => (next) => (action) => {
-  console.log(action.type);
+const loggerMiddleware: Middleware = (_store) => (next) => (action) => {
+  console.log('[ActionLoggingMiddleware]: ', action.type);
   return next(action);
 };
 
@@ -26,11 +26,11 @@ describe('createModuleStore', () => {
 
   it('applies default middleware', () => {
     sinon.spy(console, 'log');
-    const store = createModuleStore({ middleware: [basicThunk] })([
+    const store = createModuleStore({ middleware: [loggerMiddleware] })([
       { name: 'First', reducers: { key1: (state = '') => state } }
     ]);
     store.dispatch({ type: 'WAT' });
-    expect((console.log as SinonSpy).calledWith('WAT')).toBeTruthy();
+    expect((console.log as SinonSpy).calledWith('[ActionLoggingMiddleware]: ', 'WAT')).toBeTruthy();
     (console.log as SinonSpy).restore();
   });
 
