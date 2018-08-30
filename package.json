@@ -1,9 +1,9 @@
 {
   "author": "Kevin Rocker",
   "license": "MIT",
-  "name": "redux-partition",
+  "name": "remoduled",
   "version": "1.0.0",
-  "description": "Partitioning your Redux into Pieces",
+  "description": "Encapsulated Modules for Redux",
   "main": "index.ts",
   "types": "index.d.ts",
   "scripts": {

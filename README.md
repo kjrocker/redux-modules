@@ -6,8 +6,6 @@ It's a common redux practice to arrange your reducers, actions, and (if you use 
 
 Well look no further, because this is what `redux-modules` aims to solve.
 
-NOTE: This is aimed at projects with more separation between teams, concerns, or domains than most. React platforms, monorepos with one package per application domain, or groups with one _team_ per application domain.
-
 ## Example
 
 First you create your module:
