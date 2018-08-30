@@ -50,3 +50,7 @@ import { authModule } from './auth'
 
 const store = createThunkStore([authModule])
 ```
+
+## Contributors and Credit
+
+All credit for the general concept of `remoduled` goes to @Xceleration.
